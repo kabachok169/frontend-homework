@@ -9,32 +9,19 @@ const changer = {
     '\'' : '&#39;'
 };
 
+const screen = (input, beginPos, endPos) => input.slice(beginPos, endPos).replace(/(['"&<>])/gi, function (specialSymbol) {
+        return changer[specialSymbol];
+        });
 
-const screen = (input, beginPos, endPos) => input.slice(beginPos, endPos).replace(/(['"&<>])/gi, function ($0) {
-        return changer[$0];
-    });
-
-
-const createReg = function (tags) {
-
-    let regPattern = '';
-
-    tags.forEach(function (item, i, arr) {
-        regPattern += `\<${item}\>|\<\/${item}\>|`;
-    });
-
-    regPattern = regPattern.slice(0, regPattern.length - 1);
-
-    return regPattern;
-};
-
+const createReg = (tags) => tags.reduce(function (pattern, item) {
+        return pattern + `\<${item}\>|\<\/${item}\>|`;
+        }, '').slice(0, -1);
 
 const filter = function (input, tags) {
 
-    if(!input) {
+    if (!input) {
         return '';
-    }
-    else if(!tags.length) {
+    } else if (!tags.length) {
         return screen(input, 0, input.length);
     }
 
@@ -43,20 +30,19 @@ const filter = function (input, tags) {
 
     let reg = new RegExp(createReg(tags), 'gi');
 
-    let prevIndex = 0;
+    let previousIndex = 0;
     
     while (compareResult = reg.exec(input)) {
 
-        if (prevIndex < compareResult.index) {
-            result += screen(input, prevIndex, compareResult.index);
+        if (previousIndex < compareResult.index) {
+            result += screen(input, previousIndex, compareResult.index);
         }
 
         result += compareResult[0];
-
-        prevIndex = compareResult.index + compareResult[0].length;
+        previousIndex = compareResult.index + compareResult[0].length;
     }
 
-    result += screen(input, prevIndex, input.length);
+    result += screen(input, previousIndex, input.length);
 
     return result;
 };
