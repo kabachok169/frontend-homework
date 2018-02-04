@@ -38,8 +38,6 @@ function filter(input, tags) {
         previousIndex = compareResult.index + compareResult[0].length;
     }
 
-    result += screen(input, previousIndex, input.length);
-
-    return result;
-};
+    return result + screen(input, previousIndex, input.length);
+}
 
