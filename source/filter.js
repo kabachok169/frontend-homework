@@ -12,11 +12,10 @@ const changer = {
 const screen = (input, beginPos, endPos) => input.slice(beginPos, endPos).replace(/(['"&<>])/gi, (specialSymbol) =>
         changer[specialSymbol]);
 
-const createReg = (tags) => tags.reduce((pattern, item) => 
-        pattern + `\<${item}\>|\<\/${item}\>|`, '').slice(0, -1);
+const createReg = (tags) => tags.reduce((pattern, item) =>
+        `${pattern}\<${item}\>|\<\/${item}\>|`, '').slice(0, -1);
 
-const filter = function (input, tags) {
-
+function filter(input, tags) {
     if (!input) {
         return '';
     } else if (!tags.length) {
@@ -26,12 +25,11 @@ const filter = function (input, tags) {
     let result = '';
     let compareResult = '';
 
-    let reg = new RegExp(createReg(tags), 'gi');
+    let regExp = new RegExp(createReg(tags), 'gi');
 
     let previousIndex = 0;
     
-    while (compareResult = reg.exec(input)) {
-
+    while (compareResult = regExp.exec(input)) {
         if (previousIndex < compareResult.index) {
             result += screen(input, previousIndex, compareResult.index);
         }
