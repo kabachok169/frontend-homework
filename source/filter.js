@@ -9,13 +9,11 @@ const changer = {
     '\'' : '&#39;'
 };
 
-const screen = (input, beginPos, endPos) => input.slice(beginPos, endPos).replace(/(['"&<>])/gi, function (specialSymbol) {
-        return changer[specialSymbol];
-        });
+const screen = (input, beginPos, endPos) => input.slice(beginPos, endPos).replace(/(['"&<>])/gi, (specialSymbol) =>
+        changer[specialSymbol]);
 
-const createReg = (tags) => tags.reduce(function (pattern, item) {
-        return pattern + `\<${item}\>|\<\/${item}\>|`;
-        }, '').slice(0, -1);
+const createReg = (tags) => tags.reduce((pattern, item) => 
+        pattern + `\<${item}\>|\<\/${item}\>|`, '').slice(0, -1);
 
 const filter = function (input, tags) {
 
@@ -46,3 +44,4 @@ const filter = function (input, tags) {
 
     return result;
 };
+
